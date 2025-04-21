@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Expense Tracker - Home</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="theme.js" defer></script>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="index.html" class="active">🏠 Dashboard</a></li>
+      <li><a href="add.html">➕ Add Expense</a></li>
+      <li><a href="history.html">📜 History</a></li>
+      <li><a href="analytics.html">📊 Analytics</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <h1>💰 Expense Dashboard</h1>
+    <div class="dashboard">
+      <div class="card">
+        <h3>Total Balance</h3>
+        <p id="balance">$0.00</p>
+      </div>
+      <div class="card">
+        <h3>Total Income</h3>
+        <p class="plus" id="income">+$0.00</p>
+      </div>
+      <div class="card">
+        <h3>Total Expense</h3>
+        <p class="minus" id="expense">-$0.00</p>
+      </div>
+    </div>
+    
+    <h2>Recent Transactions</h2>
+    <ul id="recent-transactions"></ul>
+    
+    <div class="actions">
+      <a href="add.html" class="btn-primary">Add New Transaction</a>
+    </div>
+  </main>
+
+  <script src="data.js"></script>
+  <script>
+    // Expense tracker functionality
+    const balanceEl = document.getElementById('balance');
+    const incomeEl = document.getElementById('income');
+    const expenseEl = document.getElementById('expense');
+    const recentList = document.getElementById('recent-transactions');
+    const transactions = getTransactions();
+
+    const total = transactions.reduce((acc, t) => acc + t.amount, 0);
+    const income = transactions.filter(t => t.amount > 0).reduce((acc, t) => acc + t.amount, 0);
+    const expense = transactions.filter(t => t.amount < 0).reduce((acc, t) => acc + t.amount, 0) * -1;
+
+    balanceEl.innerText = `$${total.toFixed(2)}`;
+    incomeEl.innerText = `+$${income.toFixed(2)}`;
+    expenseEl.innerText = `-$${expense.toFixed(2)}`;
+    
+    // Show 5 most recent transactions
+    const recentTransactions = [...transactions]
+      .sort((a, b) => new Date(b.date) - new Date(a.date))
+      .slice(0, 5);
+      
+    if (recentTransactions.length > 0) {
+      recentList.innerHTML = recentTransactions.map(t => `
+        <li class="${t.amount > 0 ? 'income' : 'expense'}">
+          <div>
+            <strong>${t.text}</strong>
+            <small>${t.category} • ${new Date(t.date).toLocaleDateString()}</small>
+          </div>
+          <span class="${t.amount > 0 ? 'plus' : 'minus'}">${t.amount > 0 ? '+' : '-'}$${Math.abs(t.amount).toFixed(2)}</span>
+        </li>
+      `).join('');
+    } else {
+      recentList.innerHTML = '<li class="empty-state">No transactions yet. Add your first one!</li>';
+    }
+  </script>
+</body>
+</html>

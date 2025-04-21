@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Transaction History</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="theme.js" defer></script>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="index.html">🏠 Dashboard</a></li>
+      <li><a href="add.html">➕ Add Expense</a></li>
+      <li><a href="history.html" class="active">📜 History</a></li>
+      <li><a href="analytics.html">📊 Analytics</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <h1>📜 Transaction History</h1>
+    
+    <div class="filters">
+      <div class="search-container">
+        <input type="text" id="search-input" placeholder="Search transactions..." />
+      </div>
+      <div class="filter-controls">
+        <select id="category-filter" aria-label="Filter by category">
+          <option value="">All Categories</option>
+          <option value="Food">Food</option>
+          <option value="Rent">Rent</option>
+          <option value="Salary">Salary</option>
+          <option value="Travel">Travel</option>
+          <option value="Entertainment">Entertainment</option>
+          <option value="Utilities">Utilities</option>
+          <option value="Shopping">Shopping</option>
+          <option value="Other">Other</option>
+        </select>
+        <select id="type-filter" aria-label="Filter by transaction type">
+          <option value="">All Types</option>
+          <option value="income">Income</option>
+          <option value="expense">Expense</option>
+        </select>
+      </div>
+    </div>
+    
+    <ul id="history-list"></ul>
+    
+    <div id="no-results" class="empty-state" style="display: none;">
+      No transactions match your search criteria.
+    </div>
+  </main>
+
+  <script src="data.js"></script>
+  <script>
+    const list = document.getElementById('history-list');
+    const searchInput = document.getElementById('search-input');
+    const categoryFilter = document.getElementById('category-filter');
+    const typeFilter = document.getElementById('type-filter');
+    const noResults = document.getElementById('no-results');
+    const transactions = getTransactions();
+    
+    function renderTransactions(filteredTransactions) {
+      if (filteredTransactions.length === 0) {
+        list.innerHTML = '';
+        noResults.style.display = 'block';
+        return;
+      }
+      
+      noResults.style.display = 'none';
+      list.innerHTML = filteredTransactions.map(t => `
+        <li class="${t.amount > 0 ? 'income' : 'expense'}">
+          <div>
+            <strong>${t.text}</strong>
+            <small>${t.category} • ${new Date(t.date).toLocaleDateString()}</small>
+          </div>
+          <span class="${t.amount > 0 ? 'plus' : 'minus'}">${t.amount > 0 ? '+' : '-'}$${Math.abs(t.amount).toFixed(2)}</span>
+        </li>
+      `).join('');
+    }
+    
+    function filterTransactions() {
+      const searchTerm = searchInput.value.toLowerCase();
+      const categoryValue = categoryFilter.value;
+      const typeValue = typeFilter.value;
+      
+      const filtered = transactions.filter(t => {
+        // Search term filter
+        const matchesSearch = 
+          t.text.toLowerCase().includes(searchTerm) || 
+          t.category.toLowerCase().includes(searchTerm);
+        
+        // Category filter
+        const matchesCategory = !categoryValue || t.category === categoryValue;
+        
+        // Type filter
+        const matchesType = 
+          !typeValue || 
+          (typeValue === 'income' && t.amount > 0) || 
+          (typeValue === 'expense' && t.amount < 0);
+        
+        return matchesSearch && matchesCategory && matchesType;
+      });
+      
+      renderTransactions(filtered);
+    }
+    
+    // Initial render
+    renderTransactions(transactions);
+    
+    // Add event listeners for filtering
+    searchInput.addEventListener('input', filterTransactions);
+    categoryFilter.addEventListener('change', filterTransactions);
+    typeFilter.addEventListener('change', filterTransactions);
+  </script>
+</body>
+</html>

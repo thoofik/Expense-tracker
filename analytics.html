@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Analytics</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="index.html">🏠 Dashboard</a></li>
+      <li><a href="add.html">➕ Add Expense</a></li>
+      <li><a href="history.html">📜 History</a></li>
+      <li><a href="analytics.html" class="active">📊 Analytics</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <h1>📊 Analytics</h1>
+    <canvas id="chart" width="300" height="300"></canvas>
+  </main>
+
+  <script src="data.js"></script>
+  <script>
+    const ctx = document.getElementById('chart').getContext('2d');
+    const transactions = getTransactions();
+    const expenses = transactions.filter(t => t.amount < 0);
+    const summary = {};
+
+    expenses.forEach(e => {
+      summary[e.category] = (summary[e.category] || 0) + Math.abs(e.amount);
+    });
+
+    new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: Object.keys(summary),
+        datasets: [{
+          data: Object.values(summary),
+          backgroundColor: ['#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0', '#9966ff']
+        }]
+      }
+    });
+  </script>
+</body>
+</html>
