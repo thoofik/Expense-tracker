@@ -1,3 +1,4 @@
+💸 Expense Tracker Website
 A simple, multi-page expense tracking website built using HTML, CSS, and JavaScript. The project allows users to:
 
 Track income and expenses
