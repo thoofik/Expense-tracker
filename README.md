@@ -22,9 +22,10 @@ Local Storage: All data is stored in local storage to persist even after the pag
 
 Tech Stack:
 HTML: Structure of the site
-![Screenshot 2025-04-21 162535](https://github.com/user-attachments/assets/3cd013f7-31b9-4d99-af40-39450d3caa7d)
-![Screenshot 2025-04-21 162524](https://github.com/user-attachments/assets/cf15ffc3-4b4c-4c94-9a7c-a2ab4c6a06cd)
-![Screenshot 2025-04-21 162458](https://github.com/user-attachments/assets/a76b5397-ac48-4e7c-9858-118637fb8253)
+![Screenshot 2025-04-21 162535](https://github.com/user-attachments/assets/64fc7f04-3ef9-4ea6-97d3-79a3d1e6d04e)
+![Screenshot 2025-04-21 162524](https://github.com/user-attachments/assets/20297e1a-3f89-4518-8726-699cd245a6d8)
+![Screenshot 2025-04-21 162458](https://github.com/user-attachments/assets/ba53d861-fcd4-40dc-81c7-4031cf76d3e5)
+
 
 CSS: Styling for a responsive and clean UI
 
